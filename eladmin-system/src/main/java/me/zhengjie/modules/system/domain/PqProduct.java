@@ -55,18 +55,15 @@ public class PqProduct implements Serializable {
     private String productName;
 
     @Column(name = "enabled",nullable = false)
-    @NotNull
     @ApiModelProperty(value = "是否启用：0 不启用；1 启用")
     private Integer enabled;
 
     @Column(name = "create_time",nullable = false)
-    @NotNull
     @CreationTimestamp
     @ApiModelProperty(value = "创建时间")
     private Timestamp createTime;
 
     @Column(name = "update_time",nullable = false)
-    @NotNull
     @UpdateTimestamp
     @ApiModelProperty(value = "更新时间")
     private Timestamp updateTime;
