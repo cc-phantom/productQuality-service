@@ -65,7 +65,7 @@ public class PqProductServiceImpl implements PqProductService {
     @Transactional
     public PqProductDto findById(Long id) {
         PqProduct pqProduct = pqProductRepository.findById(id).orElseGet(PqProduct::new);
-        ValidationUtil.isNull(pqProduct.getId(),"PqProduct","id",id);
+        ValidationUtil.isNull(pqProduct.getProductId(),"PqProduct","id",id);
         return pqProductMapper.toDto(pqProduct);
     }
 
@@ -78,8 +78,8 @@ public class PqProductServiceImpl implements PqProductService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(PqProduct resources) {
-        PqProduct pqProduct = pqProductRepository.findById(resources.getId()).orElseGet(PqProduct::new);
-        ValidationUtil.isNull( pqProduct.getId(),"PqProduct","id",resources.getId());
+        PqProduct pqProduct = pqProductRepository.findById(resources.getProductId()).orElseGet(PqProduct::new);
+        ValidationUtil.isNull( pqProduct.getProductId(),"PqProduct","id",resources.getProductId());
         pqProduct.copy(resources);
         pqProductRepository.save(pqProduct);
     }
@@ -96,7 +96,7 @@ public class PqProductServiceImpl implements PqProductService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (PqProductDto pqProduct : all) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("组织id", pqProduct.getDeptId());
+            map.put("组织id", pqProduct.getDept() == null ? "": pqProduct.getDept().getName());
             map.put("产品名称", pqProduct.getProductName());
             map.put("是否启用：0 不启用；1 启用", pqProduct.getEnabled());
             map.put("创建时间", pqProduct.getCreateTime());

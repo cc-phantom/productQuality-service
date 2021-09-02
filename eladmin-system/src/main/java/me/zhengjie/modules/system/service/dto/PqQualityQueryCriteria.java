@@ -16,7 +16,10 @@
 package me.zhengjie.modules.system.service.dto;
 
 import lombok.Data;
-import java.util.List;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import me.zhengjie.annotation.Query;
 
 /**
@@ -30,6 +33,9 @@ public class PqQualityQueryCriteria{
     /** 精确 */
     @Query
     private Long productId;
+
+    @Query(propName = "id", type = Query.Type.IN, joinName = "dept")
+    private Set<Long> deptIds = new HashSet<>();
 
     /** 精确 */
     @Query

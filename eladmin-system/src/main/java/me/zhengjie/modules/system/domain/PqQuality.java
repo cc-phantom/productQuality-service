@@ -44,15 +44,15 @@ public class PqQuality implements Serializable {
     @ApiModelProperty(value = "id")
     private Long id;
 
-    @Column(name = "product_id",nullable = false)
-    @NotNull
-    @ApiModelProperty(value = "产品id")
-    private Long productId;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    @ApiModelProperty(value = "产品信息")
+    private PqProduct pqProduct;
 
-    @Column(name = "dept_id",nullable = false)
-    @NotNull
-    @ApiModelProperty(value = "组织id")
-    private Long deptId;
+    @OneToOne
+    @JoinColumn(name = "dept_id")
+    @ApiModelProperty(value = "用户部门")
+    private Dept dept;
 
     @Column(name = "unit_test_status",nullable = false)
     @NotNull

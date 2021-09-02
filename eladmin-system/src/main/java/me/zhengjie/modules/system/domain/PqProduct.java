@@ -40,14 +40,14 @@ public class PqProduct implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @ApiModelProperty(value = "id")
-    private Long id;
+    @Column(name = "product_id")
+    @ApiModelProperty(value = "product_id")
+    private Long productId;
 
-    @Column(name = "dept_id",nullable = false)
-    @NotNull
-    @ApiModelProperty(value = "组织id")
-    private Long deptId;
+    @OneToOne
+    @JoinColumn(name = "dept_id")
+    @ApiModelProperty(value = "用户部门")
+    private Dept dept;
 
     @Column(name = "product_name",nullable = false)
     @NotBlank

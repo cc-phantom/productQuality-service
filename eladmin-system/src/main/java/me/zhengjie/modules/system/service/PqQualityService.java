@@ -74,6 +74,12 @@ public interface PqQualityService {
     void deleteAll(Long[] ids);
 
     /**
+     * 根据产品id删除
+     * @param productId /
+     */
+    void deleteByProductId(Long productId);
+
+    /**
     * 导出数据
     * @param all 待导出的数据
     * @param response /

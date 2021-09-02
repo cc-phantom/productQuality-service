@@ -92,12 +92,17 @@ public class PqQualityServiceImpl implements PqQualityService {
     }
 
     @Override
+    public void deleteByProductId(Long productId) {
+        pqQualityRepository.deleteByProductId(productId);
+    }
+
+    @Override
     public void download(List<PqQualityDto> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (PqQualityDto pqQuality : all) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("产品id", pqQuality.getProductId());
-            map.put("组织id", pqQuality.getDeptId());
+            map.put("产品", pqQuality.getPqProduct() == null ? "" : pqQuality.getPqProduct().getProductName());
+            map.put("组织名称", pqQuality.getDept() == null ? "" : pqQuality.getDept().getName());
             map.put("单元测试运行状态：0 未知；1 成功；2 失败", pqQuality.getUnitTestStatus());
             map.put("有断言且运行成功的用例数", pqQuality.getSuccessNumWithAssert());
             map.put("没有断言但运行成功的用例数", pqQuality.getSuccessNumWithoutAssert());

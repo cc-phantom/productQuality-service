@@ -16,7 +16,9 @@
 package me.zhengjie.modules.system.rest;
 
 import me.zhengjie.annotation.Log;
+import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.PqQuality;
+import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.PqQualityService;
 import me.zhengjie.modules.system.service.dto.PqQualityQueryCriteria;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +26,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -42,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PqQualityController {
 
     private final PqQualityService pqQualityService;
+    private final DeptService deptService;
 
     @Log("导出数据")
     @ApiOperation("导出数据")
@@ -55,7 +60,15 @@ public class PqQualityController {
     @Log("查询产品质量")
     @ApiOperation("查询产品质量")
     @PreAuthorize("@el.check('pqQuality:list')")
+//    @AnonymousAccess
     public ResponseEntity<Object> query(PqQualityQueryCriteria criteria, Pageable pageable){
+        if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
+            criteria.getDeptIds().add(criteria.getDeptId());
+            // 先查找是否存在子节点
+            List<Dept> data = deptService.findByPid(criteria.getDeptId());
+            // 然后把子节点的ID都加入到集合中
+            criteria.getDeptIds().addAll(deptService.getDeptChildren(data));
+        }
         return new ResponseEntity<>(pqQualityService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

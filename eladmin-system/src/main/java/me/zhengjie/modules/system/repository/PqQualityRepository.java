@@ -18,6 +18,7 @@ package me.zhengjie.modules.system.repository;
 import me.zhengjie.modules.system.domain.PqQuality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 /**
 * @website https://el-admin.vip
@@ -25,4 +26,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @date 2021-08-29
 **/
 public interface PqQualityRepository extends JpaRepository<PqQuality, Long>, JpaSpecificationExecutor<PqQuality> {
+    @Query(value = "delete from pq_quality where product_id = ?1",nativeQuery = true)
+    void deleteByProductId(Long productId);
 }

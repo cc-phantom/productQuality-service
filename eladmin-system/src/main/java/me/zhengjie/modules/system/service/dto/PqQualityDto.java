@@ -31,10 +31,11 @@ public class PqQualityDto implements Serializable {
     private Long id;
 
     /** 产品id */
-    private Long productId;
+    private PqProductDto pqProduct;
 
     /** 组织id */
-    private Long deptId;
+//    private Long deptId;
+    private DeptSmallDto dept;
 
     /** 单元测试运行状态：0 未知；1 成功；2 失败 */
     private Integer unitTestStatus;
