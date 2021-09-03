@@ -15,29 +15,30 @@
 */
 package me.zhengjie.modules.system.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.PqProduct;
 import me.zhengjie.modules.system.domain.PqQuality;
-import me.zhengjie.modules.system.service.PqQualityService;
-import me.zhengjie.utils.ValidationUtil;
-import me.zhengjie.utils.FileUtil;
-import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.repository.PqProductRepository;
 import me.zhengjie.modules.system.service.PqProductService;
+import me.zhengjie.modules.system.service.PqQualityService;
 import me.zhengjie.modules.system.service.dto.PqProductDto;
 import me.zhengjie.modules.system.service.dto.PqProductQueryCriteria;
 import me.zhengjie.modules.system.service.mapstruct.PqProductMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
-import java.util.List;
-import java.util.Map;
-import java.io.IOException;
+import me.zhengjie.utils.ValidationUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @website https://el-admin.vip
@@ -54,21 +55,21 @@ public class PqProductServiceImpl implements PqProductService {
     private final PqProductMapper pqProductMapper;
 
     @Override
-    public Map<String,Object> queryAll(PqProductQueryCriteria criteria, Pageable pageable){
-        Page<PqProduct> page = pqProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+    public Map<String, Object> queryAll(PqProductQueryCriteria criteria, Pageable pageable) {
+        Page<PqProduct> page = pqProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(pqProductMapper::toDto));
     }
 
     @Override
-    public List<PqProductDto> queryAll(PqProductQueryCriteria criteria){
-        return pqProductMapper.toDto(pqProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    public List<PqProductDto> queryAll(PqProductQueryCriteria criteria) {
+        return pqProductMapper.toDto(pqProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     @Transactional
     public PqProductDto findById(Long id) {
         PqProduct pqProduct = pqProductRepository.findById(id).orElseGet(PqProduct::new);
-        ValidationUtil.isNull(pqProduct .getId(),"PqProduct","id",id);
+        ValidationUtil.isNull(pqProduct.getId(), "PqProduct", "id", id);
         return pqProductMapper.toDto(pqProduct);
     }
 
@@ -88,15 +89,18 @@ public class PqProductServiceImpl implements PqProductService {
     @Transactional(rollbackFor = Exception.class)
     public void update(PqProduct resources) {
         PqProduct pqProduct = pqProductRepository.findById(resources.getId()).orElseGet(PqProduct::new);
-        ValidationUtil.isNull( pqProduct.getId(),"PqProduct","id",resources.getId());
+        ValidationUtil.isNull(pqProduct.getId(), "PqProduct", "id", resources.getId());
         pqProduct.copy(resources);
         pqProductRepository.save(pqProduct);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteAll(Long[] ids) {
         for (Long id : ids) {
-            pqProductRepository.deleteById(id);
+            if (pqProductRepository.findById(id).isPresent()) {
+                pqProductRepository.deleteById(id);
+            }
             pqQualityService.deleteByProductId(id);
         }
     }
@@ -105,8 +109,8 @@ public class PqProductServiceImpl implements PqProductService {
     public void download(List<PqProductDto> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (PqProductDto pqProduct : all) {
-            Map<String,Object> map = new LinkedHashMap<>();
-            map.put("组织id", pqProduct.getDept() == null ? "": pqProduct.getDept().getName());
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("组织id", pqProduct.getDept() == null ? "" : pqProduct.getDept().getName());
             map.put("产品名称", pqProduct.getProductName());
             map.put("是否启用：0 不启用；1 启用", pqProduct.getEnabled());
             map.put("创建时间", pqProduct.getCreateTime());
