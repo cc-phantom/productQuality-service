@@ -431,6 +431,8 @@ INSERT INTO `sys_menu` VALUES (112, 98, 0, 2, '数据库新增', NULL, '', 999, 
 INSERT INTO `sys_menu` VALUES (113, 98, 0, 2, '数据库编辑', NULL, '', 999, '', '', b'0', b'0', b'0', 'database:edit', NULL, NULL, '2019-11-17 11:12:58', NULL);
 INSERT INTO `sys_menu` VALUES (114, 98, 0, 2, '数据库删除', NULL, '', 999, '', '', b'0', b'0', b'0', 'database:del', NULL, NULL, '2019-11-17 11:13:14', NULL);
 INSERT INTO `sys_menu` VALUES (116, 36, 0, 1, '生成预览', 'Preview', 'generator/preview', 999, 'java', 'generator/preview/:tableName', b'0', b'1', b'1', NULL, NULL, NULL, '2019-11-26 14:54:36', NULL);
+INSERT INTO `sys_menu` VALUES (117, 1, 3, 1, '产品管理', 'Product', 'system/product/index', 7, 'source', 'product', b'0', b'0', b'0', 'pqProduct:list', 'admin', 'admin', '2021-09-02 19:22:19', '2021-09-02 19:22:34');
+INSERT INTO `sys_menu` VALUES (118, 1, 2, 1, '质量管理', 'Quality', 'system/quality/index', 8, 'monitor', 'quality', b'0', b'0', b'0', 'pqQuality:list', 'admin', 'admin', '2021-09-02 19:24:23', '2021-09-02 19:24:39');
 COMMIT;
 
 -- ----------------------------
@@ -616,6 +618,8 @@ INSERT INTO `sys_roles_menus` VALUES (113, 1);
 INSERT INTO `sys_roles_menus` VALUES (114, 1);
 INSERT INTO `sys_roles_menus` VALUES (116, 1);
 INSERT INTO `sys_roles_menus` VALUES (120, 1);
+INSERT INTO `sys_roles_menus` VALUES (117, 1);
+INSERT INTO `sys_roles_menus` VALUES (118, 1);
 INSERT INTO `sys_roles_menus` VALUES (1, 2);
 INSERT INTO `sys_roles_menus` VALUES (2, 2);
 INSERT INTO `sys_roles_menus` VALUES (6, 2);
@@ -640,6 +644,7 @@ INSERT INTO `sys_roles_menus` VALUES (80, 2);
 INSERT INTO `sys_roles_menus` VALUES (82, 2);
 INSERT INTO `sys_roles_menus` VALUES (83, 2);
 INSERT INTO `sys_roles_menus` VALUES (116, 2);
+INSERT INTO `sys_roles_menus` VALUES (118, 2);
 COMMIT;
 
 -- ----------------------------
