@@ -45,7 +45,7 @@ public class PqProduct implements Serializable {
     @NotNull(groups = BaseEntity.Update.class)
     @Column(name = "product_id")
     @ApiModelProperty(value = "ID", hidden = true)
-    private Long productId;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "dept_id")

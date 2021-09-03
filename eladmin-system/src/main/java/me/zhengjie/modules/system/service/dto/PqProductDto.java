@@ -28,7 +28,7 @@ import java.io.Serializable;
 @Data
 public class PqProductDto implements Serializable {
 
-    private Long productId;
+    private Long id;
 
     /** 组织id */
     private DeptSmallDto dept;

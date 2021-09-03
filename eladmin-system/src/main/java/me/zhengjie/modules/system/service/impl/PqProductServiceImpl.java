@@ -65,7 +65,7 @@ public class PqProductServiceImpl implements PqProductService {
     @Transactional
     public PqProductDto findById(Long id) {
         PqProduct pqProduct = pqProductRepository.findById(id).orElseGet(PqProduct::new);
-        ValidationUtil.isNull(pqProduct.getProductId(),"PqProduct","id",id);
+        ValidationUtil.isNull(pqProduct .getId(),"PqProduct","id",id);
         return pqProductMapper.toDto(pqProduct);
     }
 
@@ -78,8 +78,8 @@ public class PqProductServiceImpl implements PqProductService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(PqProduct resources) {
-        PqProduct pqProduct = pqProductRepository.findById(resources.getProductId()).orElseGet(PqProduct::new);
-        ValidationUtil.isNull( pqProduct.getProductId(),"PqProduct","id",resources.getProductId());
+        PqProduct pqProduct = pqProductRepository.findById(resources.getId()).orElseGet(PqProduct::new);
+        ValidationUtil.isNull( pqProduct.getId(),"PqProduct","id",resources.getId());
         pqProduct.copy(resources);
         pqProductRepository.save(pqProduct);
     }

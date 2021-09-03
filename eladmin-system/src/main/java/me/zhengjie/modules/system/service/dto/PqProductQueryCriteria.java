@@ -32,7 +32,7 @@ public class PqProductQueryCriteria{
 
     /** 精确 */
     @Query
-    private Long productId;
+    private Long id;
 
     /** 精确 */
     @Query
