@@ -23,6 +23,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -40,8 +42,9 @@ public class PqProduct implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(groups = BaseEntity.Update.class)
     @Column(name = "product_id")
-    @ApiModelProperty(value = "product_id")
+    @ApiModelProperty(value = "ID", hidden = true)
     private Long productId;
 
     @OneToOne
