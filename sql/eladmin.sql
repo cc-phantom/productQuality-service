@@ -830,7 +830,7 @@ COMMIT;
 DROP TABLE IF EXISTS `pq_product`;
 CREATE TABLE `pq_product`
 (
-    `id`           BIGINT(20)  NOT NULL AUTO_INCREMENT,
+    `product_id`   BIGINT(20)  NOT NULL AUTO_INCREMENT,
     `dept_id`      BIGINT(20)  NOT NULL COMMENT '组织id',
     `product_name` varchar(45) NOT NULL COMMENT '产品名称',
     `enabled`      tinyint(4)  NOT NULL DEFAULT '1' COMMENT '是否启用：0 不启用；1 启用',
@@ -838,7 +838,7 @@ CREATE TABLE `pq_product`
         COMMENT '创建时间',
     `update_time`  DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(
             3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
-    PRIMARY KEY (`id`) USING BTREE,
+    PRIMARY KEY (`product_id`) USING BTREE,
     INDEX `idx_dept` (`dept_id`) USING BTREE
 
 ) ENGINE = InnoDB
