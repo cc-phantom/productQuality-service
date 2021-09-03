@@ -58,6 +58,9 @@ public class PqQualityDto implements Serializable {
     /** 单元测试用例质量（0-100分）（要求0-100之间数字格式，最多两位小数） */
     private Float unitTestQualityScore;
 
+    /** 单元测试有效性（0-100分）（要求0-100之间数字格式，最多两位小数） */
+    private Float unitTestEffectivenessScore;
+
     /** 被评审产品代码行数 */
     private Integer codeLineNum;
 

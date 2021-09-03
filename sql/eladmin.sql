@@ -860,6 +860,7 @@ CREATE TABLE `pq_quality`
     `fail_num_with_exception`             int(11)     NOT NULL DEFAULT '0' COMMENT '异常失败的用例数',
     `test_num`                            int(11)     NOT NULL DEFAULT '0' COMMENT '单元测试用例个数',
     `unit_test_quality_score`             FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '单元测试用例质量（0-100分）（要求0-100之间数字格式，最多两位小数）',
+    `unit_test_effectiveness_score`       FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '单元测试有效性（0-100分）（要求0-100之间数字格式，最多两位小数）',
     `code_line_num`                       int(11)     NOT NULL DEFAULT '0' COMMENT '被评审产品代码行数',
     `unit_test_density`                   FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '千行代码单元测试用例密度（=有断言且运行成功的用例数/被评审产品代码行数*1000）,结果保留2位小数',
     `line_coverage_rate`                  int(11)     NOT NULL DEFAULT '0' COMMENT '行覆盖率，填写0-100之间的数字整数格式',
