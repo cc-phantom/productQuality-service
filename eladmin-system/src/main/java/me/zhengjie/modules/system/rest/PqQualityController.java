@@ -26,8 +26,10 @@ import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.PqQualityService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.PqQualityQueryCriteria;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.enums.DataScopeEnum;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,9 +77,16 @@ public class PqQualityController {
     @ApiOperation("查询产品质量")
     @PreAuthorize("@el.check('pqQuality:list')")
     public ResponseEntity<Object> query(PqQualityQueryCriteria criteria, Pageable pageable) {
-        log.info("PqQualityController <=== criteria:{} ===>", criteria);
         UserDto userDto = userService.findById(SecurityUtils.getCurrentUserId());
-        if (userDto.getIsAdmin()) {
+        log.info("PqQualityController <=== criteria:{} ===>userDto:{}", criteria, userDto);
+        boolean isAdmin = false;
+        for (RoleSmallDto role : userDto.getRoles()) {
+            if (DataScopeEnum.ALL.getValue().equals(role.getDataScope())) {
+                isAdmin = true;
+                break;
+            }
+        }
+        if (isAdmin) {
             if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
                 criteria.getDeptIds().add(criteria.getDeptId());
                 // 先查找是否存在子节点
@@ -89,7 +98,7 @@ public class PqQualityController {
             Long deptId = userDto.getDept().getId();
             criteria.getDeptIds().add(deptId);
             // 先查找是否存在子节点
-            List<Dept> data = deptService.findByPid(criteria.getDeptId());
+            List<Dept> data = deptService.findByPid(deptId);
             // 然后把子节点的ID都加入到集合中
             criteria.getDeptIds().addAll(deptService.getDeptChildren(data));
         }
