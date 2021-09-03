@@ -827,4 +827,59 @@ CREATE TABLE `tool_qiniu_content` (
 BEGIN;
 COMMIT;
 
+DROP TABLE IF EXISTS `pq_product`;
+CREATE TABLE `pq_product`
+(
+    `id`           BIGINT(20)  NOT NULL AUTO_INCREMENT,
+    `dept_id`      BIGINT(20)  NOT NULL COMMENT '组织id',
+    `product_name` varchar(45) NOT NULL COMMENT '产品名称',
+    `enabled`      tinyint(4)  NOT NULL DEFAULT '1' COMMENT '是否启用：0 不启用；1 启用',
+    `create_time`  DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+        COMMENT '创建时间',
+    `update_time`  DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(
+            3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_dept` (`dept_id`) USING BTREE
+
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC
+  COMMENT='产品表';
+
+DROP TABLE IF EXISTS `pq_quality`;
+CREATE TABLE `pq_quality`
+(
+    `id`                                  BIGINT(20)  NOT NULL AUTO_INCREMENT,
+    `product_id`                          BIGINT(20)  NOT NULL COMMENT '产品id',
+    `dept_id`                             BIGINT(20)  NOT NULL COMMENT '组织id',
+    `unit_test_status`                    tinyint(4)  NOT NULL DEFAULT '0' COMMENT '单元测试运行状态：0 未知；1 成功；2 失败',
+    `success_num_with_assert`             int(11)     NOT NULL DEFAULT '0' COMMENT '有断言且运行成功的用例数',
+    `success_num_without_assert`          int(11)     NOT NULL DEFAULT '0' COMMENT '没有断言但运行成功的用例数',
+    `fail_num_with_assert`                int(11)     NOT NULL DEFAULT '0' COMMENT '断言运行失败的用例数',
+    `fail_num_with_exception`             int(11)     NOT NULL DEFAULT '0' COMMENT '异常失败的用例数',
+    `test_num`                            int(11)     NOT NULL DEFAULT '0' COMMENT '单元测试用例个数',
+    `unit_test_quality_score`             FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '单元测试用例质量（0-100分）（要求0-100之间数字格式，最多两位小数）',
+    `code_line_num`                       int(11)     NOT NULL DEFAULT '0' COMMENT '被评审产品代码行数',
+    `unit_test_density`                   FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '千行代码单元测试用例密度（=有断言且运行成功的用例数/被评审产品代码行数*1000）,结果保留2位小数',
+    `line_coverage_rate`                  int(11)     NOT NULL DEFAULT '0' COMMENT '行覆盖率，填写0-100之间的数字整数格式',
+    `branch_coverage_rate`                int(11)     NOT NULL DEFAULT '0' COMMENT '分支覆盖率，填写0-100之间的数字整数格式',
+    `product_quality_subjective_score`    FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '产品质量主观打分（0-100分）（要求数字格式，最多两位小数）',
+    `product_quality_comprehensive_score` FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '产品质量综合得分,公式是：单元测试用例质量*20%+单元测试有效性*10%+千行代码单元测试用例密度*30%+行覆盖率*20%+分支覆盖率*10%+产品代码质量打分*10%',
+    `vote_score`                          FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '产品质量投票得分',
+    `product_quality_final_score`         FLOAT(11)   NOT NULL DEFAULT '0' COMMENT '产品质量最终得分=产品质量综合得分+产品质量投票得分',
+    `enabled`                             tinyint(4)  NOT NULL DEFAULT '1' COMMENT '是否启用：0 不启用；1 启用',
+    `create_time`                         DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+        COMMENT '创建时间',
+    `update_time`                         DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(
+            3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_product` (`product_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1000
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC
+  COMMENT='产品质量信息表';
+
+
 SET FOREIGN_KEY_CHECKS = 1;
