@@ -16,6 +16,8 @@
 package me.zhengjie.modules.system.service.impl;
 
 import me.zhengjie.modules.system.domain.PqProduct;
+import me.zhengjie.modules.system.domain.PqQuality;
+import me.zhengjie.modules.system.service.PqQualityService;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +49,7 @@ import java.util.LinkedHashMap;
 @RequiredArgsConstructor
 public class PqProductServiceImpl implements PqProductService {
 
+    private final PqQualityService pqQualityService;
     private final PqProductRepository pqProductRepository;
     private final PqProductMapper pqProductMapper;
 
@@ -72,7 +75,13 @@ public class PqProductServiceImpl implements PqProductService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PqProductDto create(PqProduct resources) {
-        return pqProductMapper.toDto(pqProductRepository.save(resources));
+        PqProduct pqProduct = pqProductRepository.save(resources);
+        PqProductDto productDto = pqProductMapper.toDto(pqProduct);
+        PqQuality quality = new PqQuality();
+        quality.setPqProduct(pqProduct);
+        quality.setDept(pqProduct.getDept());
+        pqQualityService.create(quality);
+        return productDto;
     }
 
     @Override
@@ -88,6 +97,7 @@ public class PqProductServiceImpl implements PqProductService {
     public void deleteAll(Long[] ids) {
         for (Long id : ids) {
             pqProductRepository.deleteById(id);
+            pqQualityService.deleteByProductId(id);
         }
     }
 

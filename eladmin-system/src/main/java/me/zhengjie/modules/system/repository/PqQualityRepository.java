@@ -26,6 +26,7 @@ import org.springframework.data.jpa.repository.Query;
 * @date 2021-08-29
 **/
 public interface PqQualityRepository extends JpaRepository<PqQuality, Long>, JpaSpecificationExecutor<PqQuality> {
-    @Query(value = "delete from pq_quality where product_id = ?1",nativeQuery = true)
+//    @Query(value = "delete from pq_quality where product_id = ?1",nativeQuery = true)
+    @Query(value = "update pq_quality set enabled = 0 where product_id = ?1",nativeQuery = true)
     void deleteByProductId(Long productId);
 }

@@ -44,7 +44,7 @@ public class PqProduct implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(groups = BaseEntity.Update.class)
     @Column(name = "product_id")
-    @ApiModelProperty(value = "ID", hidden = true)
+    @ApiModelProperty(value = "productId", hidden = true)
     private Long id;
 
     @OneToOne
@@ -59,7 +59,7 @@ public class PqProduct implements Serializable {
 
     @Column(name = "enabled",nullable = false)
     @ApiModelProperty(value = "是否启用：0 不启用；1 启用")
-    private Integer enabled;
+    private Integer enabled = 1;
 
     @Column(name = "create_time",nullable = false)
     @CreationTimestamp
