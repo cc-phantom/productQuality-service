@@ -15,24 +15,36 @@
 */
 package me.zhengjie.modules.system.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.PqQuality;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.PqQualityService;
+import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.PqQualityQueryCriteria;
+import me.zhengjie.modules.system.service.dto.UserDto;
+import me.zhengjie.utils.SecurityUtils;
 import org.springframework.data.domain.Pageable;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 
 /**
 * @website https://el-admin.vip
@@ -43,10 +55,12 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @Api(tags = "产品质量管理")
 @RequestMapping("/api/pqQuality")
+@Slf4j
 public class PqQualityController {
 
     private final PqQualityService pqQualityService;
     private final DeptService deptService;
+    private final UserService userService;
 
     @Log("导出数据")
     @ApiOperation("导出数据")
@@ -60,31 +74,41 @@ public class PqQualityController {
     @Log("查询产品质量")
     @ApiOperation("查询产品质量")
     @PreAuthorize("@el.check('pqQuality:list')")
-//    @AnonymousAccess
-    public ResponseEntity<Object> query(PqQualityQueryCriteria criteria, Pageable pageable){
-        if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
-            criteria.getDeptIds().add(criteria.getDeptId());
+    public ResponseEntity<Object> query(PqQualityQueryCriteria criteria, Pageable pageable) {
+        log.info("PqQualityController <=== criteria:{} ===>", criteria);
+        UserDto userDto = userService.findById(SecurityUtils.getCurrentUserId());
+        if (userDto.getIsAdmin()) {
+            if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
+                criteria.getDeptIds().add(criteria.getDeptId());
+                // 先查找是否存在子节点
+                List<Dept> data = deptService.findByPid(criteria.getDeptId());
+                // 然后把子节点的ID都加入到集合中
+                criteria.getDeptIds().addAll(deptService.getDeptChildren(data));
+            }
+        } else {
+            Long deptId = userDto.getDept().getId();
+            criteria.getDeptIds().add(deptId);
             // 先查找是否存在子节点
             List<Dept> data = deptService.findByPid(criteria.getDeptId());
             // 然后把子节点的ID都加入到集合中
             criteria.getDeptIds().addAll(deptService.getDeptChildren(data));
         }
-        return new ResponseEntity<>(pqQualityService.queryAll(criteria,pageable),HttpStatus.OK);
+        return new ResponseEntity<>(pqQualityService.queryAll(criteria, pageable), HttpStatus.OK);
     }
 
     @PostMapping
     @Log("新增产品质量")
     @ApiOperation("新增产品质量")
     @PreAuthorize("@el.check('pqQuality:add')")
-    public ResponseEntity<Object> create(@Validated @RequestBody PqQuality resources){
-        return new ResponseEntity<>(pqQualityService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity<Object> create(@Validated @RequestBody PqQuality resources) {
+        return new ResponseEntity<>(pqQualityService.create(resources), HttpStatus.CREATED);
     }
 
     @PutMapping
     @Log("修改产品质量")
     @ApiOperation("修改产品质量")
     @PreAuthorize("@el.check('pqQuality:edit')")
-    public ResponseEntity<Object> update(@Validated @RequestBody PqQuality resources){
+    public ResponseEntity<Object> update(@Validated @RequestBody PqQuality resources) {
         pqQualityService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
