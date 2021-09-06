@@ -18,6 +18,7 @@ package me.zhengjie.modules.system.repository;
 import me.zhengjie.modules.system.domain.PqQuality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -27,6 +28,7 @@ import org.springframework.data.jpa.repository.Query;
 **/
 public interface PqQualityRepository extends JpaRepository<PqQuality, Long>, JpaSpecificationExecutor<PqQuality> {
 //    @Query(value = "delete from pq_quality where product_id = ?1",nativeQuery = true)
+    @Modifying
     @Query(value = "update pq_quality set enabled = 0 where product_id = ?1",nativeQuery = true)
     void deleteByProductId(Long productId);
 }
