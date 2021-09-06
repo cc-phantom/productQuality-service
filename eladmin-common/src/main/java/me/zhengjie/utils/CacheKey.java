@@ -25,34 +25,34 @@ public interface CacheKey {
     /**
      * 用户
      */
-    String USER_ID = "eladmin::user::id:";
+    String USER_ID = "user::id:";
     /**
      * 数据
      */
-    String DATA_USER = "eladmin::data::user:";
+    String DATA_USER = "data::user:";
     /**
      * 菜单
      */
-    String MENU_ID = "eladmin::menu::id:";
-    String MENU_USER = "eladmin::menu::user:";
+    String MENU_ID = "menu::id:";
+    String MENU_USER = "menu::user:";
     /**
      * 角色授权
      */
-    String ROLE_AUTH = "eladmin::role::auth:";
+    String ROLE_AUTH = "role::auth:";
     /**
      * 角色信息
      */
-    String ROLE_ID = "eladmin::role::id:";
+    String ROLE_ID = "role::id:";
     /**
      * 部门
      */
-    String DEPT_ID = "eladmin::dept::id:";
+    String DEPT_ID = "dept::id:";
     /**
      * 岗位
      */
-    String JOB_ID = "eladmin::job::id:";
+    String JOB_ID = "job::id:";
     /**
      * 数据字典
      */
-    String DICT_NAME = "eladmin::dict::name:";
+    String DICT_NAME = "dict::name:";
 }
