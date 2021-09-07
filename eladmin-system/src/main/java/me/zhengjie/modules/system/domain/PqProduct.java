@@ -24,6 +24,7 @@ import javax.validation.constraints.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import me.zhengjie.annotation.ExcelColumn;
 import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.*;
 import java.sql.Timestamp;

@@ -246,6 +246,15 @@ public class DeptServiceImpl implements DeptService {
         }
     }
 
+    /**
+     * 根据部门名称批量查询
+     * @param names
+     * @return
+     */
+    @Override public List<Dept> findByName(Set<String> names) {
+        return deptRepository.findByName(names);
+    }
+
     private void updateSubCnt(Long deptId){
         if(deptId != null){
             int count = deptRepository.countByPid(deptId);

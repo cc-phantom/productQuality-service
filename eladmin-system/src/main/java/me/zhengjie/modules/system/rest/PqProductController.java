@@ -15,10 +15,13 @@
  */
 package me.zhengjie.modules.system.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.system.domain.PqProduct;
 import me.zhengjie.modules.system.service.PqProductService;
+import me.zhengjie.modules.system.service.dto.ImportProduct;
 import me.zhengjie.modules.system.service.dto.PqProductQueryCriteria;
+import me.zhengjie.utils.ExcelUtil;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +30,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -35,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author mashanshan
  * @date 2021-08-30
  **/
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "产品管理")
@@ -84,4 +92,22 @@ public class PqProductController {
         pqProductService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(value = "/import")
+    @Log("导入产品")
+    @ApiOperation("导入产品")
+    @PreAuthorize("@el.check('pqProduct:add')")
+    public ResponseEntity<Object> importProduct(@Validated @RequestParam("file") MultipartFile file){
+        InputStream is;
+        try {
+            is = file.getInputStream();
+        } catch (Exception ex) {
+            log.warn("read file {} inputstream failed", file.getOriginalFilename());
+            throw new RuntimeException("read file failed");
+        }
+        List<ImportProduct> importProducts = ExcelUtil.readExcel(ImportProduct.class, file.getOriginalFilename(), is);
+        ;
+        return new ResponseEntity<>(pqProductService.importProduct(importProducts),HttpStatus.CREATED);
+    }
+
 }

@@ -15,12 +15,17 @@
 */
 package me.zhengjie.modules.system.service.impl;
 
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.PqProduct;
 import me.zhengjie.modules.system.domain.PqQuality;
 import me.zhengjie.modules.system.repository.PqProductRepository;
+import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.PqProductService;
 import me.zhengjie.modules.system.service.PqQualityService;
+import me.zhengjie.modules.system.service.dto.DeptDto;
+import me.zhengjie.modules.system.service.dto.ImportProduct;
 import me.zhengjie.modules.system.service.dto.PqProductDto;
 import me.zhengjie.modules.system.service.dto.PqProductQueryCriteria;
 import me.zhengjie.modules.system.service.mapstruct.PqProductMapper;
@@ -39,6 +44,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
 * @website https://el-admin.vip
@@ -53,6 +61,7 @@ public class PqProductServiceImpl implements PqProductService {
     private final PqQualityService pqQualityService;
     private final PqProductRepository pqProductRepository;
     private final PqProductMapper pqProductMapper;
+    private final DeptService deptService;
 
     @Override
     public Map<String, Object> queryAll(PqProductQueryCriteria criteria, Pageable pageable) {
@@ -119,4 +128,53 @@ public class PqProductServiceImpl implements PqProductService {
         }
         FileUtil.downloadExcel(list, response);
     }
+
+    /**
+     * 批量创建
+     * @param pqProducts
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PqProductDto> createAll(List<PqProduct> pqProducts) {
+        List<PqProduct> pqProductList = pqProductRepository.saveAll(pqProducts);
+        List<PqProductDto> productDtoList = pqProductMapper.toDto(pqProductList);
+        List<PqQuality> qualityList = pqProducts.stream().map(pqProduct -> {
+            PqQuality pqQuality = new PqQuality();
+            pqQuality.setPqProduct(pqProduct);
+            pqQuality.setDept(pqProduct.getDept());
+            return pqQuality;
+        }).collect(Collectors.toList());
+        pqQualityService.createAll(qualityList);
+        return productDtoList;
+    }
+
+    /**
+     * 导入
+     * @param importProducts
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PqProductDto> importProduct(List<ImportProduct> importProducts) {
+        List<Dept> depts = deptService.findByName(importProducts.stream().map(ImportProduct::getDeptName).collect(
+                Collectors.toSet()));
+        if (depts.size() > 0) {
+            Map<String, Dept> deptMap = depts.stream().collect(Collectors.toMap(Dept::getName, Function
+                    .identity()));
+            List<PqProduct> pqProducts = importProducts.stream().map(importProduct -> {
+                Dept dept = deptMap.get(importProduct.getDeptName());
+                if(dept == null) {
+                    return null;
+                }
+                PqProduct pqProduct = new PqProduct();
+                pqProduct.setDept(dept);
+                pqProduct.setProductName(importProduct.getProductName());
+                return pqProduct;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+            if (pqProducts.size() > 0) {
+                return createAll(pqProducts);
+            }
+        }
+        return Lists.newArrayList();
+    }
+
 }

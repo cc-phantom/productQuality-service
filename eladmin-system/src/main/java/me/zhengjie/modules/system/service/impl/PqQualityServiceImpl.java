@@ -127,4 +127,15 @@ public class PqQualityServiceImpl implements PqQualityService {
         }
         FileUtil.downloadExcel(list, response);
     }
+
+    /**
+     * 批量新增
+     * @param pqQualities
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PqQualityDto> createAll(List<PqQuality> pqQualities) {
+        return pqQualityMapper.toDto(pqQualityRepository.saveAll(pqQualities));
+    }
 }

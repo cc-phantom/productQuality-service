@@ -121,4 +121,11 @@ public interface DeptService {
      * @param deptDtos /
      */
     void verification(Set<DeptDto> deptDtos);
+
+    /**
+     * 根据部门名称批量查询
+     * @param names
+     * @return
+     */
+    List<Dept> findByName(Set<String> names);
 }
