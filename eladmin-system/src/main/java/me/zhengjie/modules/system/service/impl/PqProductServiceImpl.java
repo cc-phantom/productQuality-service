@@ -155,7 +155,7 @@ public class PqProductServiceImpl implements PqProductService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<PqProductDto> importProduct(List<ImportProduct> importProducts) {
-        List<Dept> depts = deptService.findByName(importProducts.stream().map(ImportProduct::getDeptName).collect(
+        List<Dept> depts = deptService.findAllByName(importProducts.stream().map(ImportProduct::getDeptName).collect(
                 Collectors.toSet()));
         if (depts.size() > 0) {
             Map<String, Dept> deptMap = depts.stream().collect(Collectors.toMap(Dept::getName, Function

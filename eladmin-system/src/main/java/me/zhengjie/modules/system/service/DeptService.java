@@ -127,5 +127,5 @@ public interface DeptService {
      * @param names
      * @return
      */
-    List<Dept> findByName(Set<String> names);
+    List<Dept> findAllByName(Set<String> names);
 }

@@ -251,8 +251,9 @@ public class DeptServiceImpl implements DeptService {
      * @param names
      * @return
      */
-    @Override public List<Dept> findByName(Set<String> names) {
-        return deptRepository.findByName(names);
+    @Override
+    public List<Dept> findAllByName(Set<String> names) {
+        return deptRepository.findAllByName(names);
     }
 
     private void updateSubCnt(Long deptId){
