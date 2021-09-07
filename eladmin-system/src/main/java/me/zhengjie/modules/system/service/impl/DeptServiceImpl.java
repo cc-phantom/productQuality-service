@@ -253,7 +253,7 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public List<Dept> findAllByName(Set<String> names) {
-        return deptRepository.findAllByName(names);
+        return deptRepository.findAllByNameIn(names);
     }
 
     private void updateSubCnt(Long deptId){

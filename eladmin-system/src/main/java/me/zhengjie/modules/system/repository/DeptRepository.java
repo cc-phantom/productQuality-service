@@ -72,5 +72,5 @@ public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificat
      * @param names 部门名称列表
      * @return /
      */
-    List<Dept> findAllByName(Iterable<String> names);
+    List<Dept> findAllByNameIn(Iterable<String> names);
 }
