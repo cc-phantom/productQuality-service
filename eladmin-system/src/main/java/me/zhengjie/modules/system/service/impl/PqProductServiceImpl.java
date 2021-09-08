@@ -107,10 +107,10 @@ public class PqProductServiceImpl implements PqProductService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteAll(Long[] ids) {
         for (Long id : ids) {
+            pqQualityService.deleteByProductId(id);
             if (pqProductRepository.findById(id).isPresent()) {
                 pqProductRepository.deleteById(id);
             }
-            pqQualityService.deleteByProductId(id);
         }
     }
 
