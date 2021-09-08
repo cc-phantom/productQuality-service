@@ -93,7 +93,7 @@ public class PqQualityServiceImpl implements PqQualityService {
 
     @Override
     public void deleteByProductId(Long productId) {
-        if (pqQualityRepository.findById(productId).isPresent()) {
+        if (pqQualityRepository.queryByProductId(productId).isPresent()) {
             pqQualityRepository.deleteByProductId(productId);
         }
     }
