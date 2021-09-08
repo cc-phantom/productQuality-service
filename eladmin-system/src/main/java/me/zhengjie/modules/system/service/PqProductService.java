@@ -16,6 +16,7 @@
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.PqProduct;
+import me.zhengjie.modules.system.service.dto.ImportProduct;
 import me.zhengjie.modules.system.service.dto.PqProductDto;
 import me.zhengjie.modules.system.service.dto.PqProductQueryCriteria;
 import org.springframework.data.domain.Pageable;
@@ -80,4 +81,16 @@ public interface PqProductService {
     * @throws IOException /
     */
     void download(List<PqProductDto> all, HttpServletResponse response) throws IOException;
+
+    /**
+     * 批量创建
+     * @param pqProducts
+     */
+    List<PqProductDto> createAll(List<PqProduct> pqProducts);
+
+    /**
+     * 导入
+     * @param importProducts
+     */
+    List<PqProductDto> importProduct(List<ImportProduct> importProducts);
 }

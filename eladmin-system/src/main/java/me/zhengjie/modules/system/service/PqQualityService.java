@@ -86,4 +86,11 @@ public interface PqQualityService {
     * @throws IOException /
     */
     void download(List<PqQualityDto> all, HttpServletResponse response) throws IOException;
+
+    /**
+     * 批量新增
+     * @param pqQualities
+     * @return
+     */
+    List<PqQualityDto> createAll(List<PqQuality> pqQualities);
 }
