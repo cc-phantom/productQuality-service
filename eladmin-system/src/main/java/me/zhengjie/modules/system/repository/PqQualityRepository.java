@@ -21,6 +21,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 /**
 * @website https://el-admin.vip
 * @author mashanshan
@@ -31,4 +33,7 @@ public interface PqQualityRepository extends JpaRepository<PqQuality, Long>, Jpa
     @Modifying
     @Query(value = "delete from pq_quality where product_id = ?1",nativeQuery = true)
     void deleteByProductId(Long productId);
+
+    @Query(value = "select * from pq_quality where product_id = ?1",nativeQuery = true)
+    Optional<PqQuality> queryByProductId(Long productId);
 }
